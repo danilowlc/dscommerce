@@ -34,14 +34,23 @@ public class ProductService {
     @Transactional
     public ProductDTO insert(ProductDTO dto){
         Product product = new Product();
-
-        product.setName(dto.getName());
-        product.setDescription(dto.getDescription());
-        product.setPrice(dto.getPrice());
-        product.setImgUrl(dto.getImgUrl());
-
+        copyDtoToEntity(dto, product);
         product = repository.save(product);
-
         return new ProductDTO(product);
+    }
+
+    @Transactional
+    public ProductDTO update(Long id, ProductDTO dto){
+        Product product = repository.getReferenceById(id);
+        copyDtoToEntity(dto, product);
+        product = repository.save(product);
+        return new ProductDTO(product);
+    }
+
+    private void copyDtoToEntity(ProductDTO dto, Product entity){
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setPrice(dto.getPrice());
+        entity.setImgUrl(dto.getImgUrl());
     }
 }
